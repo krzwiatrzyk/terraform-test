@@ -1,0 +1,8 @@
+{
+  "packages": [
+    "terraform"
+  ],
+  "shell": {
+    "init_hook": null
+  }
+}

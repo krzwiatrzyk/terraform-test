@@ -1,0 +1,29 @@
+version: 3
+
+tasks:
+  init:
+    cmds:
+    - terraform init
+    sources:
+    - providers.tf
+    - backend.tf
+
+  plan:
+    deps:
+    - init
+    cmds:
+    - terraform plan -out output/tfplan.out
+    - terraform show -json output/tfplan.out > output/tfplan.json
+
+  apply: terraform apply -auto-approve
+
+  # https://github.com/im2nguyen/rover
+  visualize:rover:
+  - docker run --rm -it -p 9000:9000 -v $(pwd):/src im2nguyen/rover # --network host
+
+  # https://github.com/hieven/terraform-visual
+  visualize:tfvisual: echo
+
+  login: terraform login
+
+  import:bucket: terraform import aws_s3_bucket.data "data"

@@ -1,0 +1,7 @@
+version: 3
+
+includes:
+  terraform: 
+    dir: terraform
+    taskfile: terraform/Taskfile.yaml
+    

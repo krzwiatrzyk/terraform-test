@@ -1,0 +1,53 @@
+version: 3
+
+tasks:
+  install:app-image-launcher:
+    cmds:
+    - sudo apt install software-properties-common
+    - sudo add-apt-repository ppa:appimagelauncher-team/stable
+    - sudo apt update
+    - sudo apt install appimagelauncher
+
+  install:localstack:cockpit:
+    cmds:
+    - wget -nc {{ .CLI_ARGS }} -O localstack-cockpit.AppImage
+  
+  # https://github.com/localstack/awscli-local
+  install:localstack:cli:
+    cmds:
+    - pip install localstack
+
+  install:awslocal: pip install awscli-local
+  install:awscli: |
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    unzip awscliv2.zip
+    sudo ./aws/install
+    rm awscliv2.zip
+    rm -rf aws
+
+  start: localstack start -d
+  status: localstack status services
+
+  create:sqs:
+  - awslocal sqs create-queue --queue-name sample-queue
+
+  aws:buckets:list: awslocal s3 ls
+
+  aws:lambda:create:hello:
+    cmds: 
+    - mkdir -p /tmp/localstack/lambda
+    - cmd: ln lambda/hello.py /tmp/localstack/lambda/hello.py
+      ignore_error: true
+    - |
+      awslocal lambda create-function --function-name hello \
+          --code S3Bucket="__local__",S3Key="/tmp/localstack/lambda" \
+          --handler hello.lambda_handler \
+          --runtime python3.8 \
+          --role cool-stacklifter
+
+  aws:lambda:delete:hello: awslocal lambda delete-function --function-name hello
+
+  aws:lambda:invoke:hello:
+    cmds:
+    - awslocal lambda invoke --function-name hello output/hello.txt
+

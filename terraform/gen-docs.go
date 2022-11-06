@@ -9,12 +9,6 @@ import (
 
 var temp *template.Template
 
-type docs struct {
-	Modules []string
-}
-
-var tfDocs docs
-
 func init() {
     temp = template.Must(template.ParseFiles("README.md.tmpl"))
 }
@@ -31,10 +25,9 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	tfDocs.Modules = append(tfDocs.Modules, string(out))
 
 	// err = temp.Execute(os.Stdout, tfDocs)
-	err = temp.Execute(file, tfDocs)
+	err = temp.Execute(file, string(out))
 	if err != nil {
         log.Fatalln(err)
     }

@@ -30,5 +30,6 @@ tasks:
 
   outputs: terraform output
 
-  docs:jq-get-data: terraform-docs markdown modules/jq-get-data
-  docs:generate:readme: go run gen-docs.go
+  generate:docs: terraform-docs markdown table . --recursive --output-file README.md
+  generate:vars: terraform-docs tfvars hcl . > terraform.tfvars
+  test:generate:readme: go run gen-docs.go

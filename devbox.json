@@ -1,6 +1,8 @@
 {
   "packages": [
-    "terraform"
+    "terraform",
+    "terraform-docs",
+    "go_1_19"
   ],
   "shell": {
     "init_hook": null

@@ -27,3 +27,8 @@ tasks:
   login: terraform login
 
   import:bucket: terraform import aws_s3_bucket.data "data"
+
+  outputs: terraform output
+
+  docs:jq-get-data: terraform-docs markdown modules/jq-get-data
+  docs:generate:readme: go run gen-docs.go
